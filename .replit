@@ -1,38 +1,18 @@
+entrypoint = "main-revision_quiz/main.py"
 modules = ["python-3.11"]
-[agent]
-expertMode = true
 
 [nix]
 channel = "stable-25_05"
 
-[workflows]
-runButton = "Project"
+[unitTest]
+language = "python3"
 
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Web App"
-
-[[workflows.workflow]]
-name = "Web App"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd web-revision_quiz && python webui.py"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[ports]]
-localPort = 5000
-externalPort = 80
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-deploymentTarget = "autoscale"
-run = ["gunicorn", "--bind=0.0.0.0:5000", "--chdir=web-revision_quiz", "webui:app"]
+run = ["python3", "main.py"]
+deploymentTarget = "cloudrun"
+
+[agent]
+expertMode = true
