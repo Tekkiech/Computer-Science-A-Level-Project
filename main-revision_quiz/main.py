@@ -36,8 +36,15 @@ def load_questions(level, subject):
 def load_performance():
     if not os.path.exists(PERFORMANCE_FILE):
         return {}
-    with open(PERFORMANCE_FILE, "r") as file:
-        return json.load(file)
+    try:
+        with open(PERFORMANCE_FILE, "r") as file:
+            content = file.read().strip()
+            if not content:  # file is empty
+                return {}
+            return json.loads(content)
+    except json.JSONDecodeError:
+        print("Warning: performance.json is corrupted or invalid. Starting fresh.")
+        return {}
 
 
 def save_performance(performance):
